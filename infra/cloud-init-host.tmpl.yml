@@ -18,8 +18,8 @@ write_files:
       [workers]
       ${replace(worker_ips, "\n", "\n      ")}
 runcmd:
-  - cat /run/mydir/hosts >> /var/log/cloud-init-output.log
-  - mkdir -p /home/almalinux/ansible
+  - git clone https://github.com/0orja/distributed-transcription.git /home/almalinux/distributed-transcription --depth 1
+  - mv /home/almalinux/distributed-transcription/ansible /home/almalinux/
   - cp /run/mydir/hosts /home/almalinux/ansible/hosts
 
 final_message: |
