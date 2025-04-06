@@ -1,0 +1,40 @@
+# WORKERS
+- name: Clear old targets
+  become: true
+  ansible.builtin.file:
+    path: /beegfs_data
+    state: absent
+
+- name: Create target location
+  become: true
+  ansible.builtin.file:
+    path: /beegfs_data/target
+    state: directory
+
+- name: Configure client
+  become: true
+  ansible.builtin.command:
+    cmd: /opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data/target -m mgmtnode
+
+- name: Auth file
+  become: true
+  ansible.builtin.copy:
+    src: ./.generated/connauthfile
+    dest: /etc/beegfs/connauthfile
+    owner: root
+    group: root
+    mode: 400
+
+- name: fix storage conf
+  become: true
+  ansible.builtin.replace:
+    path: /etc/beegfs/beegfs-storage.conf
+    regexp: 'connAuthFile[ \t]+='
+    replace: 'connAuthFile=/etc/beegfs/connauthfile'
+
+- name: start storage
+  become: true
+  ansible.builtin.systemd_service:
+    name: beegfs-storage
+    state: started
+    enabled: true

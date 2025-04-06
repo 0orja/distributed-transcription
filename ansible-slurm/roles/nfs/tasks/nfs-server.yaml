@@ -1,0 +1,37 @@
+- name: Make directory to export
+  become: true
+  ansible.builtin.file:
+    path: /nfs
+    state: directory
+
+- name: Create exports file
+  become: true
+  template:
+    src: files/exports.j2
+    dest:  /etc/exports
+    mode: "0644"
+
+- name: Run exportfs
+  become: true
+  ansible.builtin.shell: exportfs -a
+
+- name: Enable NFS server service
+  become: true
+  ansible.builtin.service:
+    name: nfs-server
+    enabled: true
+    state: started 
+
+- name: Make user directory
+  become: true
+  ansible.builtin.file:
+    path: /nfs/almalinux
+    state: directory
+    owner: almalinux
+
+- name: Create home directory sym-link
+  become: true
+  ansible.builtin.file:
+    src: /nfs/almalinux
+    dest: /home/almalinux/nfs
+    state: link

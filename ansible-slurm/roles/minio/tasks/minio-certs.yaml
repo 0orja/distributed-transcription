@@ -1,0 +1,67 @@
+- name: Create minio group
+  become: true
+  ansible.builtin.group:
+    name: minio-user
+    state: present
+- name: Create minio user
+  become: true
+  ansible.builtin.user:
+    append: true
+    groups: minio-user
+    password: "!"
+    password_lock: true
+    state: present
+    name: minio-user
+
+- name: Copy TLS generation stub
+  become: true
+  ansible.builtin.copy:
+    mode: "0700"
+    src: "./files/generate_certs.sh"
+    dest: "/root/generate_certs.sh"
+- name: check if cert exist
+  become: true
+  ansible.builtin.stat:
+    path: /root/minio.crt
+  register: cert
+- name: Create certificate
+  become: true
+  ansible.builtin.shell: "bash /root/generate_certs.sh {{inventory_hostname}}"
+  when: force_create_new_certs or not cert.stat.exists
+- name: Create necessary directories
+  become: true
+  ansible.builtin.file:
+    name: "/home/{{ item[0] }}/{{ item[1] }}"
+    state: directory
+    owner: "{{ item[0] }}"
+    group: "{{ item[0] }}"
+  loop: 
+    - ["minio-user", ".minio"]
+    - ["minio-user", ".minio/certs"]
+    - ["almalinux", ".mc"]
+    - ["almalinux", ".mc/certs"]
+    - ["almalinux", ".mc/certs/CAs"]
+
+- name: copy certificate to cert directories with permissions
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    owner: "{{ item[0] }}"
+    group: "{{ item[0] }}"
+    mode: "{{ item[2] }}"
+    src: "/root/minio.crt"
+    dest: "/home/{{ item[0] }}/{{ item[1] }}"
+  loop:
+    - ["minio-user", ".minio/certs/public.crt", "0644"]
+    - ["almalinux", ".mc/certs/{{inventory_hostname}}.crt", "0600"]
+    - ["almalinux", ".mc/certs/CAs/local.crt", "0600"]
+
+- name: Copy the key to the minio-user directory
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    owner: minio-user
+    group: minio-user
+    mode: "0600"
+    src: "/root/minio.key"
+    dest: "/home/minio-user/.minio/certs/private.key"

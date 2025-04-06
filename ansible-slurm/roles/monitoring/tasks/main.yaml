@@ -1,0 +1,6 @@
+- name: start prometheus
+  import_tasks: monitoring-server.yaml
+  when: inventory_hostname in groups['storagenode']
+
+- name: start node_exporter
+  import_tasks: monitoring-clients.yaml

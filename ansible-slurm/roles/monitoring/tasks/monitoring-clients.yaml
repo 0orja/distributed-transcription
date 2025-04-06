@@ -1,0 +1,29 @@
+- name: Get epel repository
+  become: true
+  ansible.builtin.dnf:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    state: present
+- name: accept repo GPG key
+  become: true
+  ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9
+
+- name: install node-exporter
+  become: true
+  ansible.builtin.dnf:
+    name: golang-github-prometheus-node-exporter
+    state: latest
+    disable_gpg_check: true
+- name: move service file
+  become: true
+  ansible.builtin.copy:
+    src: files/node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+- name: start node-exporter # always restart
+  become: true
+  ansible.builtin.service:
+    name: node_exporter
+    state: started
+    enabled: true
+    daemon_reload: true

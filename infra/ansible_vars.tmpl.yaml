@@ -1,0 +1,11 @@
+host_ip: ${host_ip}
+worker_ips:
+%{ for ip in worker_ips ~}
+  - ${ip}
+%{ endfor ~}
+prometheus_port: ${prometheus_port}
+grafana_hostname: ${grafana_hostname}
+nodeexporter_port: ${nodeexporter_port}
+minio_s3_port: ${minio_s3_port}
+minio_s3_hostname: ${minio_s3_hostname}
+minio_console_port: ${minio_console_port}

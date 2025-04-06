@@ -1,0 +1,14 @@
+# already in main
+# ALL workers + loginnode
+- name: Make user directory
+  become: true
+  ansible.builtin.file:
+    path: /beegfs/almalinux
+    state: directory
+    owner: almalinux
+- name: Create home directory sym-link
+  become: true
+  ansible.builtin.file:
+    src: /beegfs/almalinux
+    dest: "/home/almalinux/beegfs🐝"
+    state: link

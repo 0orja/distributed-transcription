@@ -1,0 +1,4 @@
+- name: create groups and certificates
+  import_tasks: minio-certs.yaml
+- name: install minio
+  import_tasks: minio.yaml

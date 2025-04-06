@@ -1,0 +1,26 @@
+#cloud-config
+bootcmd:
+  - [ dnf, config-manager, --set-enabled, crb ]
+  - [ dnf, install, -y, epel-release ]
+  - [ dnf, install, -y, ansible-core ]
+  - [ dnf, install, -y, git ]
+
+ssh_authorized_keys:
+  - ${public_key_openssh}
+  - ${lecturer_key_openssh}
+
+write_files:
+  - path: /run/mydir/hosts
+    defer: true
+    content: |
+      [host]
+      localhost ansible_connection=local
+      [workers]
+      ${replace(worker_ips, "\n", "\n      ")}
+runcmd:
+  - cat /run/mydir/hosts >> /var/log/cloud-init-output.log
+  - mkdir -p /home/almalinux/ansible
+  - cp /run/mydir/hosts /home/almalinux/ansible/hosts
+
+final_message: |
+  cloud-init has finished

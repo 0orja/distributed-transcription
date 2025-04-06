@@ -1,0 +1,53 @@
+- name: Install go
+  become: true
+  ansible.builtin.dnf:
+    name: golang
+    state: present
+- name: Get epel repository
+  become: true
+  ansible.builtin.dnf:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    state: present
+- name: accept repo GPG key
+  become: true
+  ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9
+
+- name: Install prometheus
+  become: true
+  ansible.builtin.dnf:
+    name: golang-github-prometheus 
+    state: present
+- name: set targets in config 
+  become: true
+  ansible.builtin.template:
+    src: ../templates/my-prometheus.yml.j2
+    dest: /etc/prometheus/my-prometheus.yml
+- name: start prometheus
+  become: true
+  ansible.builtin.shell: prometheus --config.file=/etc/prometheus/my-prometheus.yml
+
+- name: install grafana
+  become: true
+  ansible.builtin.dnf:
+    name: grafana
+    state: present
+- name: start grafana
+  become: true
+  ansible.builtin.service: 
+    name: grafana-server
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: generate dashboard file to node
+  ansible.builtin.template:
+    src: templates/grafana-dashboard.json.j2 # inject instance IPs into the json template
+    dest: /home/almalinux/grafana-template-dashboard.json
+- name: deploy grafana dashboard
+  community.grafana.grafana_dashboard:
+    path: /home/almalinux/grafana-template-dashboard.json
+    grafana_url: "https://{{ grafana_hostname }}.comp0235.condenser.arc.ucl.ac.uk"
+    slug: cluster-dashboard-ansible
+    state: present
+    overwrite: true # overwrite dashboard if it already exists
+    commit_message: "Deployed by ansible"

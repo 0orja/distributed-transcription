@@ -1,0 +1,46 @@
+
+# packages:
+#   - ansible-core
+#   - git
+#   - python3-pip
+# write_files:
+#   - path: /etc/ansible/hosts
+#     content: |
+#       [host]
+#       localhost ansible_connection=local
+#       [workers]
+#       ${worker_ips}
+#     permissions: '0644'
+#   - path: /ansible_scripts.sh
+#     content: |
+#       #!/bin/bash
+#       mkdir -p /ansible
+#       cd /ansible
+#       # Clone your Ansible scripts or download them
+#       # git clone https://your-repo-url.git
+#       # Additional setup steps as needed
+#     permissions: '0755'
+#   - path: /create_ansible_vars.yaml
+#     content: |
+#       #!/bin/bash
+#       cd /ansible
+#       # Get the host IP address
+#       HOST_IP=$(hostname -I | awk '{print $1}')
+#       # Create vars.yaml with the dynamic host IP
+#       cat > /ansible/vars.yaml <<EOF
+#       host_ip: $HOST_IP
+#       worker_ips:
+#       $(for ip in ${worker_ips_yaml}; do echo "  - $ip"; done)
+#       prometheus_port: ${prometheus_port}
+#       grafana_hostname: ${grafana_hostname}
+#       nodeexporter_port: ${nodeexporter_port}
+#       minio_s3_port: ${minio_s3_port}
+#       minio_s3_hostname: ${minio_s3_hostname}
+#       minio_console_port: ${minio_console_port}
+#       EOF
+#     permissions: '0755'
+# runcmd:
+#   - pip3 install ansible
+#   - bash /ansible_scripts.sh
+#   - bash /create_ansible_vars.yaml
+  # - chown -R almalinux:almalinux /ansible
