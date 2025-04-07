@@ -8,6 +8,7 @@ bootcmd:
 ssh_authorized_keys:
   - ${public_key_openssh}
   - ${lecturer_key_openssh}
+  - ${host_key_openssh}
 
 write_files:
   - path: /run/mydir/hosts
@@ -17,10 +18,24 @@ write_files:
       localhost ansible_connection=local
       [workers]
       ${replace(worker_ips, "\n", "\n      ")}
+  - path: /run/mydir/vars-for-ansible.yaml
+    defer: true
+    content: |
+      worker_ips:
+        - ${replace(worker_ips, "\n", "\n        - ")}
+      prometheus_port: ${prometheus_port}
+      grafana_hostname: ${grafana_hostname}
+      nodeexporter_port: ${nodeexporter_port}
+      minio_s3_port: ${minio_s3_port}
+      minio_s3_hostname: ${minio_s3_hostname}
+      minio_console_port: ${minio_console_port}
+      minio_console_hostname: ${minio_console_hostname}
+    permissions: '0644'
 runcmd:
   - git clone https://github.com/0orja/distributed-transcription.git /home/almalinux/distributed-transcription --depth 1
-  - mv /home/almalinux/distributed-transcription/ansible /home/almalinux/
-  - cp /run/mydir/hosts /home/almalinux/ansible/hosts
+  - cp /run/mydir/hosts /home/almalinux/distributed-transcription/ansible/hosts
+  - chown -R almalinux:almalinux /home/almalinux/distributed-transcription
+  - cp /run/mydir/vars-for-ansible.yaml /home/almalinux/distributed-transcription/ansible/vars.yaml
 
 final_message: |
   cloud-init has finished

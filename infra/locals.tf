@@ -15,11 +15,11 @@ locals {
     }
   minio_tags = {
     condenser_ingress_isEnabled = true
-    condenser_ingress_os_hostname = "${var.username}-s3"
+    condenser_ingress_os_hostname = "minio-${var.username}-s3"
     condenser_ingress_os_port = 9200
     condenser_ingress_os_protocol = "https"
     condenser_ingress_os_nginx_proxy-body-size = "100000m"
-    condenser_ingress_cons_hostname = "${var.username}-cons"
+    condenser_ingress_cons_hostname = "minio-${var.username}-cons"
     condenser_ingress_cons_port = 9201
     condenser_ingress_cons_protocol = "https"
     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
