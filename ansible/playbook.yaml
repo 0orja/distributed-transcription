@@ -1,0 +1,26 @@
+# # sets up the cluster infrastructure
+# - name: Bootstrap machines
+#   hosts: all
+#   become: true
+#   vars:
+#     do_upgrade: false
+#   roles:
+#    - role: bootstrap
+    
+- name: set up ssh
+  hosts: all
+  roles:
+    - role: ssh-setup
+
+# - name: configure monitoring
+#   hosts: all
+#   vars_files: 
+#     - vars.yaml
+#   roles: 
+#     - role: monitoring
+
+# - name: setup nfs
+#   hosts: all
+#   become: true
+#   roles: 
+#     - role: nfs

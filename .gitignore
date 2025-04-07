@@ -3,3 +3,5 @@
 miniopass
 *key.pub
 *.generated*
+hosts
+

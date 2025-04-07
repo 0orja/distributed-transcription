@@ -6,11 +6,12 @@
       %}workernode{{lookup('ansible.utils.index_of', groups['workers'], 'eq', inventory_hostname) + 1 }}{% endif %}"
     use: systemd
 
-- name: create ssh key
-  import_tasks: commonkeys.yaml
-  when: inventory_hostname in groups['managernode']
-- name: share keys among cluster
-  import_tasks: sharecommonkeys.yaml
+- name: create cluster ssh key
+  import_tasks: create-cluster-key.yaml
+  when: inventory_hostname in groups['host']
+- name: distribute key apair among cluster
+  import_tasks: share-cluster-key.yaml
+  when: inventory_hostname in groups['workers']
 
 - name: set ssh config
   ansible.builtin.copy:

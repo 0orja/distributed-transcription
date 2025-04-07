@@ -4,12 +4,12 @@
   ansible.builtin.dnf:
     name: "*"
     state: latest
-  when: inventory_hostname in groups['workers']
+  when: inventory_hostname in groups['workers'] and do_upgrade
 
 - name: post-update reboot
   become: true
   reboot:
-  when: inventory_hostname in groups['workers']
+  when: inventory_hostname in groups['workers'] and do_upgrade
 
 - name: Install basic packages
   import_tasks: customisations.yaml
