@@ -1,26 +1,81 @@
-# # sets up the cluster infrastructure
-# - name: Bootstrap machines
-#   hosts: all
-#   become: true
-#   vars:
-#     do_upgrade: false
-#   roles:
-#    - role: bootstrap
+# sets up the cluster infrastructure
+- name: Bootstrap machines
+  hosts: all
+  become: true
+  vars:
+    do_upgrade: false
+  roles:
+   - role: bootstrap
     
 - name: set up ssh
   hosts: all
   roles:
     - role: ssh-setup
 
-# - name: configure monitoring
-#   hosts: all
-#   vars_files: 
-#     - vars.yaml
-#   roles: 
-#     - role: monitoring
+- name: configure monitoring
+  hosts: all
+  vars_files: 
+    - vars.yaml
+  roles: 
+    - role: monitoring
 
-# - name: setup nfs
+- name: nfs
+  hosts: all
+  roles:
+    - role: nfs
+
+- name: munge
+  hosts: all
+  become: true
+  roles:
+    - role: munge
+- name: restart munge daemon
+  hosts: host
+  become: true
+  tasks:
+    - name: restart munge
+      ansible.builtin.systemd:
+        name: munge
+        state: restarted
+        enabled: true
+    
+
+- name: set up slurm
+  hosts: all
+  become: true
+  roles:
+    - role: slurm
+
+- name: set up python environment
+  hosts: all
+  become: true
+  roles:
+    - role: application
+
+
+# - name: install beegfs
 #   hosts: all
 #   become: true
 #   roles: 
-#     - role: nfs
+#     - role: beegfs
+# - name: setup beegfs host
+#   hosts: host
+#   become: true
+#   tasks:
+#     - include_role:
+#         name: beegfs
+#         tasks_from: beegfs-host
+# - name: setup beegfs storage
+#   hosts: workers
+#   become: true
+#   tasks:
+#     - include_role:
+#         name: beegfs
+#         tasks_from: beegfs-storage
+# - name: setup beegfs client and links
+#   hosts: all
+#   become: true
+#   tasks:
+#     - include_role:
+#         name: beegfs
+#         tasks_from: beegfs-client

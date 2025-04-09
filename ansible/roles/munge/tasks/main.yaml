@@ -1,0 +1,7 @@
+- name: Generate munge key 
+  import_tasks: munge-key.yaml
+  when: inventory_hostname in groups['host']
+
+- name: share key
+  import_tasks: share-munge-key.yaml
+  when: inventory_hostname in groups['workers']

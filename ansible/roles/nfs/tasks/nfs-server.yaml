@@ -1,7 +1,7 @@
 - name: Make directory to export
   become: true
   ansible.builtin.file:
-    path: /nfs
+    path: /data/nfs
     state: directory
 
 - name: Create exports file
@@ -25,13 +25,13 @@
 - name: Make user directory
   become: true
   ansible.builtin.file:
-    path: /nfs/almalinux
+    path: /data/nfs/almalinux
     state: directory
     owner: almalinux
 
 - name: Create home directory sym-link
   become: true
   ansible.builtin.file:
-    src: /nfs/almalinux
+    src: /data/nfs/almalinux
     dest: /home/almalinux/nfs
     state: link

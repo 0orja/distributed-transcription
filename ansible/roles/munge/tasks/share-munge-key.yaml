@@ -1,0 +1,14 @@
+- name: Put munge key
+  become: true
+  ansible.builtin.copy:
+    src: ./.generated/munge/munge.key
+    dest: /etc/munge/munge.key
+    owner: munge
+    group: munge
+    mode: 0400
+- name: Start munge
+  become: true
+  ansible.builtin.systemd_service:
+    name: munge
+    state: started
+    enabled: true

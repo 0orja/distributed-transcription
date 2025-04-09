@@ -1,0 +1,32 @@
+# set up the virtual environment for whisper
+- name: rpm fusion
+  become: true
+  ansible.builtin.dnf:
+    name: https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
+    state: latest
+    disable_gpg_check: true
+- name: rpm fusion 
+  become: true
+  ansible.builtin.dnf:
+    name: https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
+    state: latest
+    disable_gpg_check: true
+- name: install ffmpeg
+  become: true
+  ansible.builtin.dnf:
+    name: ffmpeg
+    state: latest
+
+- name: copy requirements file
+  ansible.builtin.copy:
+    src: "files/requirements.txt"
+    dest: "/home/almalinux/whisper-requirements.txt"
+    owner: almalinux
+    group: almalinux
+    mode: '0644'
+
+- name: Initiate virtualenv
+  ansible.builtin.pip: 
+    virtualenv: "/home/almalinux/whisper_env" 
+    virtualenv_command: /usr/bin/python -m venv
+    requirements: "/home/almalinux/whisper-requirements.txt"

@@ -1,0 +1,3 @@
+- name: set up venv
+  import_tasks: environment.yaml
+  when: inventory_hostname in groups['workers']

@@ -1,0 +1,8 @@
+---
+- name: slurm controller
+  import_tasks: controller.yaml
+  when: inventory_hostname in groups['host']
+
+- name: slurm workers
+  import_tasks: workers.yaml
+  when: inventory_hostname in groups['workers']

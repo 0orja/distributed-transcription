@@ -1,6 +1,6 @@
 {% for node in groups["workers"] %}
-/nfs {{node}}(rw,sync,no_all_squash,no_root_squash)
+/data/nfs {{node}}(rw,sync,no_all_squash,no_root_squash)
 {% endfor %}
-{% for node in groups["loginnode"] %}
-/nfs {{node}}(rw,sync,no_all_squash,no_root_squash)
+{% for node in groups["host"] %}
+/data/nfs {{node}}(rw,sync,no_all_squash,no_root_squash)
 {% endfor %}

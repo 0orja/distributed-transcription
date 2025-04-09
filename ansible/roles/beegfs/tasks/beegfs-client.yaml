@@ -1,4 +1,10 @@
-# WORKERS
+# WORKERS + HOST
+- name: rm bgfs dir
+  become: true
+  ansible.builtin.shell: |
+    sudo umount /beegfs
+    sudo rm -rf /beegfs
+
 - name: Create mount location
   become: true
   ansible.builtin.file:
@@ -8,7 +14,7 @@
 - name: Configure client
   become: true
   ansible.builtin.command:
-    cmd: /opt/beegfs/sbin/beegfs-setup-client -m mgmtnode
+    cmd: /opt/beegfs/sbin/beegfs-setup-client -m host
 
 - name: Auth file
   become: true
@@ -17,7 +23,7 @@
     dest: /etc/beegfs/connauthfile
     owner: root
     group: root
-    mode: 400
+    mode: 0400
 
 - name: Mounts file
   become: true

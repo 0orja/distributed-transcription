@@ -2,7 +2,7 @@
 - name: Make directory to export
   become: true
   ansible.builtin.file:
-    path: /nfs
+    path: /data/nfs
     state: directory
 
 - name: NFS mount
@@ -11,13 +11,13 @@
     boot: true
     state: mounted
     fstype: nfs
-    src: "{{groups['host'][0]}}:/nfs"
-    path: /nfs
+    src: "{{groups['workers'][0]}}:/data/nfs"
+    path: /data/nfs
     opts: defaults,_netdev
 
 - name: Create home directory sym-link
   become: true
   ansible.builtin.file:
-    src: /nfs/almalinux
+    src: /data/nfs/almalinux
     dest: /home/almalinux/nfs
     state: link

@@ -1,8 +1,8 @@
 ---
-name: configure nfs server
-import_tasks: nfs-server.yaml
-when: inventory_hostname in groups['host']
+- name: configure nfs server
+  import_tasks: nfs-server.yaml
+  when: inventory_hostname == groups['workers'][0]
 
-name: configure nfs client
-import_tasks: nfs-client.yaml
-when: inventory_hostname in groups['workers']
+- name: configure nfs client
+  import_tasks: nfs-client.yaml
+  when: inventory_hostname != groups['workers'][0]
