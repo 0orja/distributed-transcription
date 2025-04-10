@@ -42,4 +42,4 @@ scrape_configs:
     # machine by default.
     static_configs:
      # - targets: ['10.134.12.172:9100', '10.134.12.147:9100', '10.134.12.128:9100', '10.134.12.76:9100', 'localhost:9100']
-      - targets: ['{{ manager_ip }}:{{ nodeexporter_port }}', {% for ip in worker_ips %}'{{ ip }}:{{ nodeexporter_port }}', {% endfor %}'localhost:{{ nodeexporter_port }}']
+      - targets: ['localhost:{{ nodeexporter_port }}', {% for ip in worker_ips %}'{{ ip }}:{{ nodeexporter_port }}', {% endfor %}]

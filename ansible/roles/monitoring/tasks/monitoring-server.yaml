@@ -24,7 +24,7 @@
     dest: /etc/prometheus/my-prometheus.yml
 - name: start prometheus
   become: true
-  ansible.builtin.shell: prometheus --config.file=/etc/prometheus/my-prometheus.yml
+  ansible.builtin.shell: nohup prometheus --config.file=/etc/prometheus/my-prometheus.yml > /dev/null 2>&1 &
 
 - name: install grafana
   become: true
@@ -39,6 +39,14 @@
     enabled: true
     daemon_reload: true
 
+- name: prometheus datasource
+  community.grafana.grafana_datasource:
+    grafana_url: "https://{{ grafana_hostname }}.comp0235.condenser.arc.ucl.ac.uk"
+    name: host-prometheus
+    ds_type: prometheus
+    ds_url: "https://{{ grafana_hostname | replace('grafana', 'prometheus') }}.comp0235.condenser.arc.ucl.ac.uk"
+    tls_skip_verify: true
+
 - name: generate dashboard file to node
   ansible.builtin.template:
     src: templates/grafana-dashboard.json.j2 # inject instance IPs into the json template
@@ -51,3 +59,4 @@
     state: present
     overwrite: true # overwrite dashboard if it already exists
     commit_message: "Deployed by ansible"
+

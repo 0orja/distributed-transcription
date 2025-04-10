@@ -15,7 +15,7 @@
         }
       ]
     },
-    "description": "test test Overview of the cluster infrastructure and pipeline progress\nCOMP0235",
+    "description": "test test Overview of the cluster infrastructure and pipeline progress\nCOMP0239",
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
@@ -24,10 +24,7 @@
     "liveNow": false,
     "panels": [
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "gridPos": {
           "h": 2,
           "w": 10,
@@ -41,7 +38,7 @@
             "showLineNumbers": false,
             "showMiniMap": false
           },
-          "content": "# Merizosearch pipeline cluster monitoring ",
+          "content": "# Audio transcription cluster monitoring ",
           "mode": "markdown"
         },
         "pluginVersion": "10.2.6",
@@ -62,10 +59,7 @@
         "type": "row"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -141,13 +135,10 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "rate(node_memory_MemAvailable_bytes{instance=\"{{ manager_ip }}:{{ nodeexporter_port }}\"}[5m]) / 1000000",
+            "expr": "rate(node_memory_MemAvailable_bytes{instance=\"localhost:{{ nodeexporter_port }}\"}[5m]) / 1000000",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -164,11 +155,8 @@
         "type": "timeseries"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
-        "description": "{{ manager_ip }}",
+        "datasource": "host-prometheus",
+        "description": "Host",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -217,14 +205,11 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum(node_filesystem_avail_bytes{instance=\"{{ manager_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"}) / 1000000000",
+            "expr": "sum(node_filesystem_avail_bytes{instance=\"localhost:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device!=\"{{ worker_ips[0]}}:/data/nfs\"}) / 1000000000",
             "fullMetaSearch": false,
             "hide": false,
             "includeNullMetadata": true,
@@ -235,13 +220,10 @@
             "useBackend": false
           },
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "editorMode": "code",
             "exemplar": false,
-            "expr": "(sum(node_filesystem_size_bytes{instance=\"{{ manager_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"})-sum(node_filesystem_avail_bytes{instance=\"{{ manager_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"})) / 1000000000",
+            "expr": "(sum(node_filesystem_size_bytes{instance=\"localhost:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device!=\"{{ worker_ips[0]}}:/data/nfs\"})-sum(node_filesystem_avail_bytes{instance=\"localhost:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device!=\"{{ worker_ips[0]}}:/data/nfs\"})) / 1000000000",
             "hide": false,
             "instant": false,
             "legendFormat": "used",
@@ -266,10 +248,7 @@
         "type": "row"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -345,13 +324,10 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "rate(node_memory_MemAvailable_bytes{instance!=\"{{ manager_ip }}:{{ nodeexporter_port }}\", instance!=\"localhost:{{ nodeexporter_port }}\"}[5m]) / 1000000000",
+            "expr": "rate(node_memory_MemAvailable_bytes{instance!=\"localhost:{{ nodeexporter_port }}\", instance!=\"localhost:{{ nodeexporter_port }}\"}[5m]) / 1000000000",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -382,10 +358,7 @@
       },
       {% for worker_ip in worker_ips %}
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "description": "{{ worker_ip }}",
         "fieldConfig": {
           "defaults": {
@@ -444,8 +417,8 @@
         },
         "gridPos": {
           "h": 8,
-          "w": 8,
-          "x": {{ (loop.index0 % 3) * 8 }},
+          "w": 6,
+          "x": {{ (loop.index0 % 4) * 6 }},
           "y": 21
         },
         "id": 8,
@@ -463,10 +436,7 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "expr": "100 - (\n  sum(rate(node_cpu_seconds_total{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\", mode=\"idle\"}[1m])) by (cpu, instance)  /\n  sum(rate(node_cpu_seconds_total{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\"}[1m])) by (cpu, instance)\n)*100\n",
@@ -487,10 +457,7 @@
       {% endfor %}
       {% for worker_ip in worker_ips %}
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "description": "{{ worker_ip }}",
         "fieldConfig": {
           "defaults": {
@@ -549,8 +516,8 @@
         },
         "gridPos": {
           "h": 8,
-          "w": 8,
-          "x": {{ (loop.index0 % 3) * 8 }},
+          "w": 6,
+          "x": {{ (loop.index0 % 4) * 6 }},
           "y": 29
         },
         "id": 11,
@@ -568,10 +535,7 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "expr": "100 - (\n  sum(rate(node_cpu_seconds_total{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\", mode=\"idle\"}[1m]))/\n  sum(rate(node_cpu_seconds_total{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\"}[1m]))\n)*100\n",
@@ -586,16 +550,13 @@
             "useBackend": false
           }
         ],
-        "title": "Worker {{ loop.index + 1 }} CPU usage percent across all cores",
+        "title": "Worker {{ loop.index0 + 1 }} CPU usage percent across all cores",
         "type": "timeseries"
       },
       {% endfor %}
       {% for worker_ip in worker_ips %}
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
+        "datasource": "host-prometheus",
         "description": "{{ worker_ip }}",
         "fieldConfig": {
           "defaults": {
@@ -616,8 +577,8 @@
         },
         "gridPos": {
           "h": 8,
-          "w": 8,
-          "x": {{ (loop.index0 % 3) * 8 }},
+          "w": 6,
+          "x": {{ (loop.index0 % 4) * 6 }},
           "y": 37
         },
         "id": 15,
@@ -645,14 +606,11 @@
         },
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum(node_filesystem_avail_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"}) / 1000000000",
+            "expr": "sum(node_filesystem_avail_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device=\"/dev/vda4\"}) / 1000000000",
             "fullMetaSearch": false,
             "hide": false,
             "includeNullMetadata": true,
@@ -663,13 +621,10 @@
             "useBackend": false
           },
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "editorMode": "code",
             "exemplar": false,
-            "expr": "(sum(node_filesystem_size_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"})-sum(node_filesystem_avail_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!=\"tmpfs\"})) / 1000000000",
+            "expr": "(sum(node_filesystem_size_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device=\"/dev/vda4\"})-sum(node_filesystem_avail_bytes{instance=\"{{ worker_ip }}:{{ nodeexporter_port }}\",fstype!~\"tmpfs|nfs4\", device=\"/dev/vda4\"})) / 1000000000",
             "hide": false,
             "instant": false,
             "legendFormat": "used",
@@ -677,7 +632,7 @@
             "refId": "used"
           }
         ],
-        "title": "Worker {{ loop.index + 1 }} Disk utilization",
+        "title": "Worker {{ loop.index0 + 1 }} Disk utilization",
         "type": "piechart"
       },
       {% endfor %}
@@ -691,15 +646,12 @@
         },
         "id": 6,
         "panels": [],
-        "title": "Storage node status",
+        "title": "NFS server status",
         "type": "row"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
-        "description": "{{ storage_ip }}",
+        "datasource": "host-prometheus",
+        "description": "{{ worker_ips[0] }}",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -749,14 +701,11 @@
         "pluginVersion": "10.2.6",
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum(node_filesystem_avail_bytes{instance=\"localhost:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) / 1000000000",
+            "expr": "sum(node_filesystem_avail_bytes{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) / 1000000000",
             "fullMetaSearch": false,
             "hide": false,
             "includeNullMetadata": true,
@@ -767,14 +716,11 @@
             "useBackend": false
           },
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "(sum(node_filesystem_size_bytes{instance=\"localhost:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) - sum(node_filesystem_avail_bytes{instance=\"localhost:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"})) / 1000000000",
+            "expr": "(sum(node_filesystem_size_bytes{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) - sum(node_filesystem_avail_bytes{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"})) / 1000000000",
             "fullMetaSearch": false,
             "hide": false,
             "includeNullMetadata": true,
@@ -785,15 +731,12 @@
             "useBackend": false
           }
         ],
-        "title": "Storage node Data disk utilization",
+        "title": "NFS server Data disk utilization",
         "type": "piechart"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-        },
-        "description": "{{ storage_ip }}",
+        "datasource": "host-prometheus",
+        "description": "{{ worker_ips[0] }}",
         "fieldConfig": {
           "defaults": {
             "color": {
@@ -871,14 +814,11 @@
         "pluginVersion": "10.2.6",
         "targets": [
           {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "bfccb0de-3736-4ea1-b94b-6db02d83e976"
-            },
+            "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "(sum(node_filesystem_size_bytes{instance=\"localhost:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) - sum(node_filesystem_avail_bytes{instance=\"localhost:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"})) / 1000000000",
+            "expr": "(sum(node_filesystem_size_bytes{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"}) - sum(node_filesystem_avail_bytes{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\", fstype!=\"tmpfs\", device=\"/dev/vdb1\"})) / 1000000000",
             "fullMetaSearch": false,
             "hide": false,
             "includeNullMetadata": true,
@@ -889,7 +829,7 @@
             "useBackend": false
           }
         ],
-        "title": "Storage node Data disk utilization over time",
+        "title": "NFS server Data disk utilization over time",
         "type": "timeseries"
       }
     ],
@@ -929,7 +869,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Merizosearch pipeline cluster dashboard",
+    "title": "Audio transcription cluster",
     "version": 1,
     "weekStart": ""
   }
