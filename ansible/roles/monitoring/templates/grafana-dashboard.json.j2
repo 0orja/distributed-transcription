@@ -672,7 +672,7 @@
         "gridPos": {
           "h": 8,
           "w": 8,
-          "x": 4,
+          "x": 0,
           "y": 46
         },
         "id": 18,
@@ -795,7 +795,7 @@
         "gridPos": {
           "h": 8,
           "w": 8,
-          "x": 12,
+          "x": 8,
           "y": 46
         },
         "id": 19,
@@ -831,7 +831,348 @@
         ],
         "title": "NFS server Data disk utilization over time",
         "type": "timeseries"
-      }
+      },
+      {
+      "datasource": "host-prometheus",
+      "description": "10.134.12.138",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 46
+      },
+      "id": 39,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.2.6",
+      "targets": [
+        {
+          "datasource": "host-prometheus",
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "rate(node_nfsd_disk_bytes_read_total{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\"}[5m])",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "NFSd bytes read",
+          "range": true,
+          "refId": "used",
+          "useBackend": false
+        },
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfsd_disk_bytes_written_total{instance=\"{{ worker_ips[0] }}:{{ nodeexporter_port }}\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "NFSd bytes written",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "NFS server disk I/O",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "host-prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 54
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpc_authentication_refreshes_total{instance=\"localhost:9100\"}[5m])",
+          "instant": false,
+          "legendFormat": "Number of RPC authentication refreshes performed",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpc_retransmissions_total{instance=\"localhost:9100\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Number of RPC transmissions performed",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpcs_total{instance=\"localhost:9100\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Total number of RPCs performed",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "NFS RPC Calls from Host",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "host-prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 54
+      },
+      "id": 38,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpc_authentication_refreshes_total{instance!=\"localhost:9100\"}[5m])",
+          "instant": false,
+          "legendFormat": "Number of RPC authentication refreshes performed",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpc_retransmissions_total{instance!=\"localhost:9100\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Number of RPC transmissions performed",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": "host-prometheus",
+          "editorMode": "code",
+          "expr": "rate(node_nfs_rpcs_total{instance!=\"localhost:9100\"}[5m])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Total number of RPCs performed",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "NFS RPC Calls from Workers",
+      "type": "timeseries"
+    }
     ],
     "refresh": "",
     "schemaVersion": 39,
@@ -872,4 +1213,4 @@
     "title": "Audio transcription cluster",
     "version": 1,
     "weekStart": ""
-  }
+}

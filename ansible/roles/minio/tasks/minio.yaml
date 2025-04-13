@@ -1,7 +1,7 @@
-- name: Create minio dir on data disk
+- name: Create minio dir
   become: true
   ansible.builtin.file:
-    path: /data/minio
+    path: /minio
     owner: minio-user
     group: minio-user
     mode: "0700"
@@ -11,6 +11,7 @@
   ansible.builtin.dnf:
     name: https://dl.min.io/server/minio/release/linux-amd64/minio.rpm
     state: present
+    disable_gpg_check: true
 - name: Install Minio command-line
   become: true
   ansible.builtin.get_url:

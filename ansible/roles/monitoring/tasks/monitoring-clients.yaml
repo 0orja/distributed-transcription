@@ -22,8 +22,8 @@
     group: root
 - name: start node-exporter # always restart
   become: true
-  ansible.builtin.service:
+  ansible.builtin.systemd_service:
     name: node_exporter
-    state: started
+    state: restarted
     enabled: true
     daemon_reload: true

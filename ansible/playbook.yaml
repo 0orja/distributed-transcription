@@ -46,6 +46,15 @@
   roles:
     - role: slurm
 
+- name: set up minio
+  hosts: host
+  vars_files:
+    - vars.yaml
+  roles:
+    - role: minio
+      vars:
+        force_create_new_certs: false
+
 - name: set up python environment
   hosts: all
   become: true
