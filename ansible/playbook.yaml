@@ -1,4 +1,4 @@
-# sets up the cluster infrastructure
+sets up the cluster infrastructure
 - name: Bootstrap machines
   hosts: all
   become: true
@@ -61,6 +61,12 @@
   roles:
     - role: application
 
+- name: download benchmark dataset
+  hosts: host
+  vars:
+    target_dir: ww2-audio-test
+  roles:
+    - role: dataset
 
 # - name: install beegfs
 #   hosts: all
