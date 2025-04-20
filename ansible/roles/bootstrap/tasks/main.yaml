@@ -1,7 +1,7 @@
 ---
-- name: set own hostname
-  ansible.builtin.shell: sed -i "s/localhost ansible_connection=local/$(hostname -I | awk '{print $1}') ansible_connection=local/g" /home/almalinux/distributed-transcription/ansible/hosts
-  when: inventory_hostname in groups['host']
+# - name: set own hostname
+#   ansible.builtin.shell: sed -i "s/localhost ansible_connection=local/$(hostname -I | awk '{print $1}') ansible_connection=local/g" /home/almalinux/distributed-transcription/ansible/hosts
+#   when: inventory_hostname in groups['host']
 
 # - name: Update linux packages
 #   become: true
@@ -26,6 +26,14 @@
 # - name: Set time-zone
 #   ansible.builtin.shell: "timedatectl set-timezone Europe/London"
 #   when: do_upgrade
+
+- name: Create hosts file
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('template', 'templates/hostfile.j2') }}"
+    dest: /etc/hosts
+    insertafter: "EOF"
+    create: yes
+    state: present
 
 # - name: mount second disk on workers
 #   import_tasks: second-disk.yaml
