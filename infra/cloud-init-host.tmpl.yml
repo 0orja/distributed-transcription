@@ -2,7 +2,7 @@
 bootcmd:
   - [ dnf, config-manager, --set-enabled, crb ]
   - [ dnf, install, -y, epel-release ]
-  - [ dnf, install, -y, ansible-core ]
+  - [ dnf, install, -y, ansible ]
   - [ dnf, install, -y, git ]
 
 ssh_authorized_keys:

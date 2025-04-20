@@ -54,11 +54,11 @@ resource "harvester_cloudinit_secret" "host-cloud-config" {
 
 resource "harvester_virtualmachine" "host" {
 
-  lifecycle {
-    replace_triggered_by = [
-      harvester_cloudinit_secret.host-cloud-config.user_data
-    ]
-  }
+  # lifecycle {
+  #   replace_triggered_by = [
+  #     harvester_cloudinit_secret.host-cloud-config.user_data
+  #   ]
+  # }
   
   count = 1
 
