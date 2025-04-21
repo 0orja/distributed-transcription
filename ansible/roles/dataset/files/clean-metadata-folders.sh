@@ -9,3 +9,6 @@ while read folder; do
   echo "removing $folder"
   rm -rf "$folder"
 done < "$1"
+
+echo "removing itemlist.txt"
+rm -f itemlist.txt

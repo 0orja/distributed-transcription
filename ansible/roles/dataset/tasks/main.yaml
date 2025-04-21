@@ -10,8 +10,8 @@
     src: files/testitemlist.txt
     dest: /home/almalinux/dataset-downloads/{{ target_dir }}/itemlist.txt
 
-- name: download dataset
-  ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ target_dir }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ target_dir }}/itemlist.txt -B 'http://archive.org/download/'"
+# - name: download dataset
+#   ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ target_dir }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ target_dir }}/itemlist.txt -B 'http://archive.org/download/'"
 
 - name: copy script
   ansible.builtin.copy: 
@@ -30,3 +30,5 @@
   ansible.builtin.shell: "/home/almalinux/dataset-downloads/{{ target_dir }}/clean-metadata-folders.sh /home/almalinux/dataset-downloads/{{ target_dir }}/metadata-folders.txt"
   args:
     chdir: /home/almalinux/nfs/{{ target_dir }}/
+
+# ls nfs/ww2-audio-tiny/AmericaLooksAbroad/*.mp3 > filelist

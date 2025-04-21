@@ -15,7 +15,7 @@
         }
       ]
     },
-    "description": "test test Overview of the cluster infrastructure and pipeline progress\nCOMP0239",
+    "description": "Overview of the cluster infrastructure and pipeline progress\nCOMP0239",
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
@@ -28,7 +28,7 @@
         "gridPos": {
           "h": 2,
           "w": 10,
-          "x": 8,
+          "x": 7,
           "y": 0
         },
         "id": 27,
@@ -138,7 +138,7 @@
             "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "rate(node_memory_MemAvailable_bytes{instance=\"localhost:{{ nodeexporter_port }}\"}[5m]) / 1000000",
+            "expr": "(node_memory_MemTotal_bytes{instance=\"localhost:{{ nodeexporter_port }}\"} - node_memory_MemAvailable_bytes{instance=\"localhost:{{ nodeexporter_port }}\"}) / 1024^3",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -327,7 +327,7 @@
             "datasource": "host-prometheus",
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "rate(node_memory_MemAvailable_bytes{instance!=\"localhost:{{ nodeexporter_port }}\", instance!=\"localhost:{{ nodeexporter_port }}\"}[5m]) / 1000000000",
+            "expr": "(node_memory_MemTotal_bytes{instance!=\"localhost:{{ nodeexporter_port }}\"} - node_memory_MemAvailable_bytes{instance!=\"localhost:{{ nodeexporter_port }}\"}) / 1024^3",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
