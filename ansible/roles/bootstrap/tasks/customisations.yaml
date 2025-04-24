@@ -10,6 +10,7 @@
       - net-tools
       - bind-utils
       - htop
+      - gcc-c++
       - git
       - python3-devel
       - python3-pip
