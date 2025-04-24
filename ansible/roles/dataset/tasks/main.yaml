@@ -1,34 +1,38 @@
 - name: Create download directory exists
   ansible.builtin.file:
-    path: /home/almalinux/dataset-downloads/{{ target_dir }}
+    path: /home/almalinux/dataset-downloads/{{ dataset_name }}
     state: directory
     mode: '0755' 
 
 - name: copy itemlist file
   ansible.builtin.copy: 
     remote_src: false
-    src: files/testitemlist.txt
-    dest: /home/almalinux/dataset-downloads/{{ target_dir }}/itemlist.txt
+    src: files/{{ itemlist_file }}
+    dest: /home/almalinux/dataset-downloads/{{ dataset_name }}/{{ itemlist_file }}
 
 # - name: download dataset
-#   ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ target_dir }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ target_dir }}/itemlist.txt -B 'http://archive.org/download/'"
+#   ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ dataset_name }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ dataset_name }}/{{ itemlist_file }} -B 'http://archive.org/download/'"
 
 - name: copy script
   ansible.builtin.copy: 
     remote_src: false
     src: files/clean-metadata-folders.sh
-    dest: /home/almalinux/dataset-downloads/{{ target_dir }}/clean-metadata-folders.sh
+    dest: /home/almalinux/dataset-downloads/{{ dataset_name }}/clean-metadata-folders.sh
     mode: '0755'
 
 - name: copy script
   ansible.builtin.copy: 
     remote_src: false
     src: files/metadata-folders.txt
-    dest: /home/almalinux/dataset-downloads/{{ target_dir }}/metadata-folders.txt
+    dest: /home/almalinux/dataset-downloads/{{ dataset_name }}/metadata-folders.txt
 
 - name: clean downloads
-  ansible.builtin.shell: "/home/almalinux/dataset-downloads/{{ target_dir }}/clean-metadata-folders.sh /home/almalinux/dataset-downloads/{{ target_dir }}/metadata-folders.txt"
+  ansible.builtin.shell: "/home/almalinux/dataset-downloads/{{ dataset_name }}/clean-metadata-folders.sh /home/almalinux/dataset-downloads/{{ dataset_name }}/metadata-folders.txt"
   args:
-    chdir: /home/almalinux/nfs/{{ target_dir }}/
+    chdir: /home/almalinux/nfs/{{ dataset_name }}/
 
-# ls nfs/ww2-audio-tiny/AmericaLooksAbroad/*.mp3 > filelist
+- name: prepare scripts
+  import_tasks: prepare-scripts.yaml
+
+- name: create s3 bucket
+  import_tasks: s3-bucket.yaml

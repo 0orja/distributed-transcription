@@ -1,3 +1,24 @@
-- name: set up venv
-  import_tasks: environment.yaml
+# - name: set up venv
+#   import_tasks: environment.yaml
+#   when: inventory_hostname in groups['workers']
+
+- name: copy application script
+  ansible.builtin.copy:
+    src: files/transcribe_service.py
+    dest: /home/almalinux/transcribe_service.py
+    owner: almalinux
+    group: almalinux
+    mode: '0755'
   when: inventory_hostname in groups['workers']
+
+# - name: copy slurm job scripts
+#   ansible.builtin.copy:
+#     src: files/{{ item }}
+#     dest: /home/almalinux/{{ item }}
+#     owner: almalinux
+#     group: almalinux
+#     mode: '0755'
+#   when: inventory_hostname == groups['workers'][0]
+#   loop:
+#     - dispatch.sh
+#     - concat.sh

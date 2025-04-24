@@ -1,0 +1,34 @@
+- name: generate filelist
+  ansible.builtin.shell: |
+    ls nfs/{{ dataset_name }}/*/*.mp3 > nfs/{{ dataset_name }}_filelist
+  register: filelist
+
+- name: create log directories
+  ansible.builtin.file:
+    path: /home/almalinux/nfs/{{ item }}-logs/{{ dataset_name }}
+    state: directory
+    mode: '0755'
+  loop:
+    - preprocess
+    - dispatch
+    - concat
+
+- name: create transcribed directory
+  ansible.builtin.file:
+    path: /home/almalinux/nfs/transcribed/{{ dataset_name }}
+    state: directory
+    mode: '0755' 
+
+
+- name: inject dataset name into batch scripts
+  ansible.builtin.template:
+    src: templates/{{ item }}.j2
+    dest: /home/almalinux/{{ item }}
+    owner: almalinux
+    group: almalinux
+    mode: '0755'
+  loop:
+    - preprocess.sh
+    - dispatch.sh
+    - concatenate.sh
+

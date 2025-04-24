@@ -1,0 +1,15 @@
+- name: start python service
+  ansible.builtin.shell: "source whisper_env/bin/activate && python transcribe_service.py nfs/transcribed"
+  when: inventory_hostname in groups['workers']
+
+- name: push dispatch and concat scripts
+  ansible.builtin.copy:
+    src: /home/almalinux/{{ item }}
+    dest: /home/almalinux/
+    owner: almalinux
+    group: almalinux
+    mode: '0755'
+  loop:
+    - dispatch.sh
+    - concatenate.sh
+  when: inventory_hostname == groups['workers'][0]

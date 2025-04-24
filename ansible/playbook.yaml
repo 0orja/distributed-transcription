@@ -73,7 +73,8 @@ sets up the cluster infrastructure
 - name: download benchmark dataset
   hosts: host
   vars:
-    target_dir: ww2-audio-test
+    dataset_name: ww2-radio
+    itemlist_file: itemlist.txt
   roles:
     - role: dataset
 

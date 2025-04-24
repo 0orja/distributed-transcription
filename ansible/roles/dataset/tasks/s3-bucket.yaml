@@ -1,0 +1,12 @@
+- name: create bucket
+  ansible.builtin.shell: mc mb local/transcription-{{ dataset_name }}
+  ignore_errors: true # ignore if bucket already exists
+- name: allow anonymous gets
+  ansible.builtin.shell: mc anonymous set download local/transcription-{{ dataset_name }}
+# - name: upload results files
+#   ansible.builtin.shell: |
+#     for file in nfs/transcribed/*/*_full.txt; do
+#       subdir=$(basename "$(dirname "$file")")
+#       mc cp "$file" "local/transcription/{{ item }}/$subdir/"
+#     done
+#   loop: "{{ dataset_names }}"
