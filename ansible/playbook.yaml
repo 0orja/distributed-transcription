@@ -54,6 +54,15 @@ sets up the cluster infrastructure
     - role: minio
       vars:
         force_create_new_certs: false
+- name: minio client on workers
+  hosts: workers
+  become: true
+  vars_files:
+    - vars.yaml
+  tasks:
+    - include_role:
+        name: minio
+        tasks_from: minio-client-only
 
 - name: set up python environment
   hosts: all

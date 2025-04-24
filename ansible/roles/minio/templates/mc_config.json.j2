@@ -2,7 +2,7 @@
         "version": "10",
         "aliases": {
                 "local": {
-                        "url": "https://{{inventory_hostname}}:{{minio_s3_port}}",
+                        "url": "https://{{ groups['host'][0] }}:{{minio_s3_port}}",
                         "accessKey": "minioadmin",
                         "secretKey": "{{lookup('ansible.builtin.file','./.miniopass')}}",
                         "api": "s3v4",

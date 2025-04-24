@@ -1,0 +1,62 @@
+- name: Create necessary directories
+  become: true
+  ansible.builtin.file:
+    name: "/home/{{ item[0] }}/{{ item[1] }}"
+    state: directory
+    owner: "{{ item[0] }}"
+    group: "{{ item[0] }}"
+  loop:
+    - ["almalinux", ".mc"]
+    - ["almalinux", ".mc/certs"]
+    - ["almalinux", ".mc/certs/CAs"]
+
+- name: Fetch generated certificate from controller to local
+  become: true
+  delegate_to: localhost
+  run_once: true
+  ansible.builtin.fetch:
+    src: /root/minio.crt
+    dest: /tmp/minio.crt
+    flat: true
+- name: copy certificate to cert directories with permissions
+  become: true
+  ansible.builtin.copy:
+    owner: "{{ item[0] }}"
+    group: "{{ item[0] }}"
+    mode: "{{ item[2] }}"
+    src: "/tmp/minio.crt"
+    dest: "/home/{{ item[0] }}/{{ item[1] }}"
+  loop:
+    - ["almalinux", ".mc/certs/{{inventory_hostname}}.crt", "0600"]
+    - ["almalinux", ".mc/certs/CAs/local.crt", "0600"]
+- name: Delete /tmp/minio.crt after copying
+  become: true
+  delegate_to: localhost
+  run_once: true
+  ansible.builtin.file:
+    path: /tmp/minio.crt
+    state: absent
+
+- name: Install Minio command-line
+  become: true
+  ansible.builtin.get_url:
+    dest: /usr/local/bin/mc
+    url: "https://dl.min.io/client/mc/release/linux-amd64/mc"
+    mode: "0755"
+
+    
+
+- name: Copy minio pass to almalinux directory
+  ansible.builtin.copy:
+    owner: almalinux
+    group: almalinux
+    mode: "0600"
+    src: "./.miniopass"
+    dest: "/home/almalinux/miniopass"
+- name: Setup mc for local access
+  ansible.builtin.template:
+    src: templates/mc_config.json.j2
+    dest:  /home/almalinux/.mc/config.json
+    owner: almalinux
+    group: almalinux
+    mode: "0600"
