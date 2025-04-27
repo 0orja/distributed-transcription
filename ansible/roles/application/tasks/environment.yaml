@@ -16,6 +16,11 @@
   ansible.builtin.dnf:
     name: ffmpeg
     state: latest
+- name: install redis
+  become: true
+  ansible.builtin.dnf:
+    name: redis
+    state: latest
 
 - name: copy requirements file
   ansible.builtin.copy:

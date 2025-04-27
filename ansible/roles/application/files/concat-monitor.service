@@ -1,0 +1,12 @@
+# /etc/systemd/system/concat-monitor.service
+[Unit]
+Description=Redis Concat Monitor
+After=network.target redis.service
+
+[Service]
+User=almalinux
+ExecStart=/home/almalinux/concat_queue_monitor.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

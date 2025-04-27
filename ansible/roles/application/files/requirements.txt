@@ -3,3 +3,4 @@ torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu
 transformers==4.51.1
 datasets==3.5.0
 soundfile==0.13.1
+redis==5.2.1

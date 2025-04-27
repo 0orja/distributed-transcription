@@ -1,0 +1,50 @@
+- name: install redis
+  become: true
+  ansible.builtin.dnf:
+    name: redis
+    state: present
+
+- name: listen on all interfaces
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^bind 127.0.0.1 -::1'
+    line: '# bind 127.0.0.1 -::1'
+
+- name: disable protected mode
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^protected-mode'
+    line: protected-mode no
+
+- name: start redis
+  become: true
+  ansible.builtin.systemd:
+    name: redis
+    state: started
+    enabled: true
+
+- name: create queue monitor service
+  ansible.builtin.copy:
+    src: files/concat_queue_monitor.sh
+    dest: /home/almalinux/concat_queue_monitor.sh
+    owner: almalinux
+    group: almalinux
+    mode: '0755'
+  when: inventory_hostname == groups['workers'][0]
+
+- name: create systemd service
+  become: true
+  ansible.builtin.copy:
+    src: files/concat-monitor.service
+    dest: /etc/systemd/system/concat-monitor.service
+  when: inventory_hostname == groups['workers'][0]
+  
+- name: start monitor service
+  become: true
+  ansible.builtin.systemd:
+    name: concat-monitor
+    state: started
+    enabled: true
+  
