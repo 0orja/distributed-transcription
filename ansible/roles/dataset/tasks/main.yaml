@@ -10,11 +10,11 @@
     src: files/{{ itemlist_file }}
     dest: /home/almalinux/dataset-downloads/{{ dataset_name }}/{{ itemlist_file }}
 
-# - name: download dataset
-#   ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ dataset_name }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ dataset_name }}/{{ itemlist_file }} -B 'http://archive.org/download/'"
+- name: download dataset
+  ansible.builtin.shell: "wget -r -H -nc -np -nH --cut-dirs=1 -P /home/almalinux/nfs/{{ dataset_name }}/ -A .mp3 -e robots=off -l1 -i /home/almalinux/dataset-downloads/{{ dataset_name }}/{{ itemlist_file }} -B 'http://archive.org/download/'"
 
 - name: copy script
-  ansible.builtin.copy: 
+  ansible.builtin.copy:
     remote_src: false
     src: files/clean-metadata-folders.sh
     dest: /home/almalinux/dataset-downloads/{{ dataset_name }}/clean-metadata-folders.sh

@@ -10,17 +10,18 @@
     mode: '0755'
   loop:
     - preprocess
-    - dispatch
     - concat
 
-- name: create transcribed directory
+- name: create preprocess and transcribed directory
   ansible.builtin.file:
-    path: /home/almalinux/nfs/transcribed/{{ dataset_name }}
+    path: /home/almalinux/nfs/{{item}}-{{ dataset_name }}
     state: directory
     mode: '0755' 
+  loop:
+    - preprocessed
+    - transcribed
 
-
-- name: inject dataset name into batch scripts
+- name: inject dataset name into batch scripts # scripts placed in home directory on host
   ansible.builtin.template:
     src: templates/{{ item }}.j2
     dest: /home/almalinux/{{ item }}
@@ -29,6 +30,5 @@
     mode: '0755'
   loop:
     - preprocess.sh
-    - dispatch.sh
     - concatenate.sh
 
