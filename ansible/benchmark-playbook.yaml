@@ -1,0 +1,19 @@
+# Download and run the benchmark dataset
+# ONLY TO BE RUN AFTER INSTALL PLAYBOOK HAS RUN
+- name: download benchmark dataset
+  hosts: host
+  vars:
+    dataset_name: ww2-radio
+    itemlist_file: benchmark-itemlist.txt
+  roles:
+    - role: dataset
+
+- name: run the processing
+  hosts: all
+  vars:
+    dataset_name: ww2-radio
+  tasks:
+    - include_role:
+        name: application
+        tasks_from: deploy
+

@@ -1,9 +1,9 @@
-sets up the cluster infrastructure
+#sets up the cluster infrastructure
 - name: Bootstrap machines
   hosts: all
   become: true
   vars:
-    do_upgrade: false
+    do_upgrade: true
   roles:
    - role: bootstrap
     
@@ -39,7 +39,6 @@ sets up the cluster infrastructure
         state: restarted
         enabled: true
     
-
 - name: set up slurm
   hosts: all
   become: true
@@ -64,43 +63,7 @@ sets up the cluster infrastructure
         name: minio
         tasks_from: minio-client-only
 
-- name: set up python environment
+- name: set up application environment
   hosts: all
-  become: true
   roles:
     - role: application
-
-- name: download benchmark dataset
-  hosts: host
-  vars:
-    dataset_name: ww2-radio
-    itemlist_file: itemlist.txt
-  roles:
-    - role: dataset
-
-# - name: install beegfs
-#   hosts: all
-#   become: true
-#   roles: 
-#     - role: beegfs
-# - name: setup beegfs host
-#   hosts: host
-#   become: true
-#   tasks:
-#     - include_role:
-#         name: beegfs
-#         tasks_from: beegfs-host
-# - name: setup beegfs storage
-#   hosts: workers
-#   become: true
-#   tasks:
-#     - include_role:
-#         name: beegfs
-#         tasks_from: beegfs-storage
-# - name: setup beegfs client and links
-#   hosts: all
-#   become: true
-#   tasks:
-#     - include_role:
-#         name: beegfs
-#         tasks_from: beegfs-client

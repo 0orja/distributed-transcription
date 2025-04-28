@@ -1,31 +1,31 @@
 ---
-# - name: set own hostname
-#   ansible.builtin.shell: sed -i "s/localhost ansible_connection=local/$(hostname -I | awk '{print $1}') ansible_connection=local/g" /home/almalinux/distributed-transcription/ansible/hosts
-#   when: inventory_hostname in groups['host']
+- name: set own hostname
+  ansible.builtin.shell: sed -i "s/localhost ansible_connection=local/$(hostname -I | awk '{print $1}') ansible_connection=local/g" /home/almalinux/distributed-transcription/ansible/hosts
+  when: inventory_hostname in groups['host']
 
-# - name: Update linux packages
-#   become: true
-#   ansible.builtin.dnf:
-#     name: "*"
-#     state: latest
-#   when: inventory_hostname in groups['workers'] and do_upgrade
+- name: Update linux packages
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when: inventory_hostname in groups['workers'] and do_upgrade
 
-# - name: post-update reboot
-#   become: true
-#   reboot:
-#   when: inventory_hostname in groups['workers'] and do_upgrade
+- name: post-update reboot
+  become: true
+  reboot:
+  when: inventory_hostname in groups['workers']
 
-# - name: Install basic packages
-#   import_tasks: customisations.yaml
-#   when: do_upgrade
+- name: Install basic packages
+  import_tasks: customisations.yaml
+  when: do_upgrade
 
-# - name: Set en-GB localization
-#   ansible.builtin.shell: "localectl set-locale en_GB.UTF-8"
-#   when: do_upgrade
+- name: Set en-GB localization
+  ansible.builtin.shell: "localectl set-locale en_GB.UTF-8"
+  when: do_upgrade
 
-# - name: Set time-zone
-#   ansible.builtin.shell: "timedatectl set-timezone Europe/London"
-#   when: do_upgrade
+- name: Set time-zone
+  ansible.builtin.shell: "timedatectl set-timezone Europe/London"
+  when: do_upgrade
 
 - name: Create hosts file
   ansible.builtin.blockinfile:
@@ -35,6 +35,6 @@
     create: yes
     state: present
 
-# - name: mount second disk on workers
-#   import_tasks: second-disk.yaml
-#   when: inventory_hostname in groups['workers']
+- name: mount second disk on workers
+  import_tasks: second-disk.yaml
+  when: inventory_hostname in groups['workers']
