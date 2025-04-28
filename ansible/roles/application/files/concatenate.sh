@@ -7,7 +7,7 @@
 #SBATCH --error=nfs/concat-logs/%j.err
 
 # Wait for the final output file to exist
-OUTPUT_DIR="nfs/run2-transcribed"
+OUTPUT_DIR="/home/almalinux/nfs/run2-transcribed"
 FILE_PATTERN=$1 
 NUM_CHUNKS=$2
 MISSING_FILES=false
@@ -15,7 +15,7 @@ BUCKET_NAME="transcription-ww2-radio"
 
 MAX_WAIT=60  # 1 minute
 START_TIME=$(date +%s)
-FAILED_FILES_LOG="nfs/concat-logs/run2_failed_files.txt"
+FAILED_FILES_LOG="/home/almalinux/nfs/concat-logs/run2_failed_files.txt"
 touch $FAILED_FILES_LOG
 
 current_chunk=0

@@ -3,15 +3,15 @@
 - name: Download a new dataset
   hosts: host
   vars:
-    dataset_name: "{{ dataset_name }}"
-    itemlist_file: "{{ itemlist_file }}"
+    dataset_name: "groks-physics"
+    itemlist_file: "sample-itemlist.txt"
   roles:
     - role: dataset
   
 - name: Run the system on a new data input
   hosts: all
   vars:
-    dataset_name: "{{ dataset_name }}"
+    dataset_name: "groks-physics"
   tasks:
     - include_role:
         name: application

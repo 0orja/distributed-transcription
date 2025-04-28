@@ -23,4 +23,4 @@
   loop:
     - preprocess
     - concat
-  when: inventory_hostname == host
+  when: inventory_hostname in groups['host']

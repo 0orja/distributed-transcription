@@ -1,0 +1,14 @@
+[Unit]
+Description=Transcription Service for {{ dataset_name }}
+After=network.target
+
+[Service]
+Type=simple
+User=almalinux
+Group=almalinux
+WorkingDirectory=/home/almalinux
+ExecStart=/home/almalinux/whisper_env/bin/python /home/almalinux/transcribe_service_redis.py nfs/transcribed-{{ dataset_name }}
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

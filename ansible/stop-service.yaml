@@ -1,0 +1,11 @@
+- name: stop transcription service
+  hosts: workers
+  become: true
+  vars:
+    dataset_name: "groks-physics"
+  tasks:
+  - name: stop transcription service
+    ansible.builtin.systemd:
+      name: "transcribe-{{ dataset_name }}"
+      state: stopped
+    when: inventory_hostname in groups['workers'] and inventory_hostname != groups['workers'][0]

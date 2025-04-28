@@ -11,7 +11,10 @@
 readarray -t files <nfs/{{ dataset_name }}_filelist
 
 # Get the number of files
+{% raw %}
 num_files=${#files[@]}
+{% endraw %}
+
 
 echo "SLURM_ARRAY_TASK_ID = $SLURM_ARRAY_TASK_ID"
 

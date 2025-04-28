@@ -1,7 +1,8 @@
 - name: generate filelist
   ansible.builtin.shell: |
     ls nfs/{{ dataset_name }}/*/*.mp3 > nfs/{{ dataset_name }}_filelist
-  register: filelist
+  args:
+    chdir: /home/almalinux/
 
 - name: create log directories
   ansible.builtin.file:
@@ -32,3 +33,8 @@
     - preprocess.sh
     - concatenate.sh
 
+- name: create systemd service file # placed in home directory on host
+  ansible.builtin.template:
+    src: templates/transcribe.service.j2
+    dest: "/home/almalinux/transcribe-{{ dataset_name }}.service"
+    mode: '0644'

@@ -3,6 +3,7 @@ import os
 import time
 import shutil
 import redis
+from pathlib import Path
 
 import torch
 import torchaudio
@@ -70,8 +71,8 @@ while True:
             )
         print("===done===")
         #print(result["text"])
-
-        rel_dir = os.path.relpath(os.path.dirname(input_file), "nfs/run2-preprocessed")
+        path_parts = Path(input_file).parts
+        rel_dir = Path(input_file).parents[0].name
         # Create output directory with same structure
 
         temp_out_subdir = os.path.join(local_outdir, rel_dir)
@@ -79,6 +80,10 @@ while True:
 
         out_file = os.path.basename(input_file).replace(".wav", ".txt")
         out_path = os.path.join(temp_out_subdir, out_file)
+        with open("/home/almalinux/debug_transcribe.log", "w") as debug:
+            debug.write(f"Transcribing {input_file} to {out_path}\n")
+            debug.write(f"extracted parent dir: {rel_dir}\n")
+            debug.write(f"remote dir: {out_dir}\n")
         with open(out_path, "w") as f:
             f.write(result["text"])
         pending_copy = True 
